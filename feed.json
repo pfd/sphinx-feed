@@ -1,0 +1,48 @@
+[
+  {
+    "title": "First Post",
+    "author": "pfd",
+    "date": "2025-06-05 00:00:00+00:00",
+    "tags": [
+      "intro",
+      "blog"
+    ],
+    "categories": [
+      "meta"
+    ],
+    "url": "//post1/",
+    "content_html": "<h1>Hello World</h1>\n<p>This is the first blog post using a custom RSS feed system!</p>",
+    "source": "/Users/pfd/Documents/sphinx-feed/docs/posts/post1.md"
+  },
+  {
+    "title": "Second Post",
+    "author": "pfd",
+    "date": "2025-06-05 00:00:00+00:00",
+    "tags": [
+      "feeds",
+      "blog"
+    ],
+    "categories": [
+      "meta",
+      "cool"
+    ],
+    "url": "//post2/",
+    "content_html": "<h1>Hello World</h1>\n<p>This is the first blog post using a custom RSS feed system!</p>",
+    "source": "/Users/pfd/Documents/sphinx-feed/docs/posts/post2.md"
+  },
+  {
+    "title": "Cool tricks",
+    "author": "pfd",
+    "date": "2025-06-05 00:00:00+00:00",
+    "tags": [
+      "intro",
+      "blog"
+    ],
+    "categories": [
+      "cool"
+    ],
+    "url": "//post/",
+    "content_html": "<h1>A very cool post</h1>\n<p>This is the first blog post using a custom RSS feed system!</p>",
+    "source": "/Users/pfd/Documents/sphinx-feed/docs/posts/post.md"
+  }
+]
