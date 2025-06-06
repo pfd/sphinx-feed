@@ -3,13 +3,11 @@ SPHINXBUILD   = sphinx-build
 SOURCEDIR     = .
 BUILDDIR      = _build
 
-FEEDGEN       = python ../generate_feeds.py
-
 .PHONY: help clean html
 
 html:
-	@echo "🔄 Generating feeds..."
-	@$(FEEDGEN)
+	@echo "🔄 Generating feeds directly into _build/html..."
+	@python ../generate_feeds.py
 	@echo "🔧 Building HTML with Sphinx..."
 	@$(SPHINXBUILD) -M html "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS)
 

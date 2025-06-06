@@ -6,8 +6,6 @@ tags: [intro, blog]
 categories: [cool]
 ---
 
-================
-An rst blog post
-================
+# A very cool post
 
 This is the first blog post using a custom RSS feed system!

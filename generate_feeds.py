@@ -8,14 +8,17 @@ from dateutil.parser import parse as parse_date
 from dateutil.tz import UTC
 from collections import defaultdict
 
-SITE_URL = "https://cooldocs.dev/blog"
+SITE_URL = "/"
 AUTHOR = "pfd"
-POSTS_DIR = Path("docs/posts")
-OUTPUT_DIR = Path("docs/_generated_feeds")
-CATEGORY_PAGE_DIR = Path("docs")
 
-OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+ROOT = Path(__file__).parent.resolve()
+POSTS_DIR = ROOT / "docs" / "posts"
+BUILD_DIR = ROOT / "docs" / "_build" / "html"
+CATEGORY_PAGE_DIR = ROOT / "docs"
 
+BUILD_DIR.mkdir(parents=True, exist_ok=True)
+
+# === Setup global feeds ===
 fg_rss = FeedGenerator()
 fg_atom = FeedGenerator()
 for fg in (fg_rss, fg_atom):
@@ -26,6 +29,8 @@ for fg in (fg_rss, fg_atom):
     fg.language("en")
 
 posts = []
+
+# === Load posts ===
 for path in POSTS_DIR.glob("*.md"):
     print(f"Processing: {path}")
     post = frontmatter.load(path)
@@ -54,7 +59,7 @@ for path in POSTS_DIR.glob("*.md"):
 
 posts.sort(key=lambda p: p["date"], reverse=True)
 
-# === Main RSS and Atom feeds ===
+# === Write main RSS + Atom feeds ===
 for post in posts:
     for fg in (fg_rss, fg_atom):
         fe = fg.add_entry()
@@ -67,22 +72,22 @@ for post in posts:
         for tag in post["tags"] + post["categories"]:
             fe.category(term=tag)
 
-fg_rss.rss_file(OUTPUT_DIR / "rss.xml")
-fg_atom.atom_file(OUTPUT_DIR / "atom.xml")
+fg_rss.rss_file(BUILD_DIR / "rss.xml")
+fg_atom.atom_file(BUILD_DIR / "atom.xml")
 
-# === JSON + HTML feeds ===
-with open(OUTPUT_DIR / "feed.json", "w") as f:
+# === JSON + HTML feed dump ===
+with open(BUILD_DIR / "feed.json", "w") as f:
     json.dump(posts, f, indent=2, default=str)
 
-with open(OUTPUT_DIR / "feed.html", "w") as f:
+with open(BUILD_DIR / "feed.html", "w") as f:
     f.write("<html><head><title>Cool Docs Blog</title></head><body><h1>Cool Docs Blog</h1><ul>")
     for post in posts:
         f.write(f"<li><a href='{post['url']}'>{post['title']}</a> – {post['date'].isoformat()}</li>")
     f.write("</ul></body></html>")
 
-print("✅ Global feeds written to:", OUTPUT_DIR)
+print("✅ Global feeds written to:", BUILD_DIR)
 
-# === Generate category listings and feeds ===
+# === Generate category pages and feeds ===
 cat_map = defaultdict(list)
 for post in posts:
     for cat in post["categories"]:
@@ -92,11 +97,11 @@ category_rst_paths = []
 
 for cat, cat_posts in cat_map.items():
     cat_slug = cat.lower().replace(" ", "-")
-    cat_feed_file = OUTPUT_DIR / f"{cat_slug}.xml"
+    cat_feed_file = BUILD_DIR / f"{cat_slug}.xml"
     cat_rst_file = CATEGORY_PAGE_DIR / f"{cat_slug}.rst"
     category_rst_paths.append(cat_rst_file)
 
-    # Generate category RSS feed
+    # Generate category-specific RSS feed
     fg = FeedGenerator()
     fg.id(f"{SITE_URL}/categories/{cat_slug}")
     fg.title(f"{cat.title()} Posts – Cool Docs Blog")
@@ -118,15 +123,16 @@ for cat, cat_posts in cat_map.items():
     fg.rss_file(cat_feed_file)
     print(f"🗂️  Wrote category feed: {cat_feed_file}")
 
-    # Write category listing page
+    # Generate category listing page (linking to output feed in _build/html)
     with cat_rst_file.open("w") as f:
         f.write(f"{cat.title()} Posts\n")
         f.write(f"{'=' * (len(cat) + 6)}\n\n")
-        f.write(f"RSS feed: :download:`{cat_slug}.xml <_generated_feeds/{cat_slug}.xml>`\n\n")
+        f.write(f"`RSS feed for {cat}`_\n\n")
+        f.write(f".. _RSS feed for {cat}: /blog/{cat_slug}.xml\n\n")
         for post in sorted(cat_posts, key=lambda p: p["date"], reverse=True):
             f.write(f"- `{post['title']} <{post['url']}>`__\n")
 
-# === Generate categories.rst with toctree ===
+# === categories.rst index page ===
 with open(CATEGORY_PAGE_DIR / "categories.rst", "w") as f:
     f.write("Categories\n==========\n\n")
     f.write(".. toctree::\n   :maxdepth: 1\n\n")

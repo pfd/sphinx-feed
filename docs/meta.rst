@@ -1,4 +1,9 @@
 Meta Posts
 ==========
 
-- `First Post <https://cooldocs.dev/blog/post1/>`__
+`RSS feed for meta`_
+
+.. _RSS feed for meta: /blog/meta.xml
+
+- `First Post <//post1/>`__
+- `Second Post <//post2/>`__

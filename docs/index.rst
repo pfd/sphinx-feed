@@ -6,10 +6,10 @@ Welcome to Cool Docs Blog!
    :maxdepth: 2
    :caption: Contents:
 
+   posts/post
    posts/post1
    posts/post2
    categories
-   categories/cool
 
 Feeds
 =====
@@ -26,4 +26,4 @@ Categories
 
 .. raw:: html
 
-   <p><a href="_generated_feeds/cool.xml">📰 Subscribe to Cool Posts RSS</a></p>
+   <p><a href="cool.xml">📰 Subscribe to Cool Posts RSS</a></p>

@@ -8,5 +8,4 @@ source_suffix = {
     '.md': 'markdown',
 }
 html_theme = 'alabaster'
-html_extra_path = ['_generated_feeds']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', '.venv']
